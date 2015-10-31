@@ -3,28 +3,63 @@
 
 import re 
 
-BAIDU = "/Users/Miyayx/server36/baikedump/baidu-dump-20150702.dat"
-HUDONG = "/Users/Miyayx/server36/baikedump/hudong-dump-20150702.dat"
+"""
+URL: http://baike.baidu.com/view/6858.htm#sub5564900
+"""
+
+BAIDU = "/home/keg/data/baikedump/baidu-dump-20151029.dat"
+HUDONG = "/home/keg/data/baikedump/hudong-dump-20150702.dat"
 
 
-baidu = {}
-title = None
-_id = None
-for line in open(BAIDU):
-    line = line.strip()
-    if line.startswith('Title'):
-        title = line[line.index(': ')+1:]
-    if line.startswith('URL:'):
-        _id = line.strip()[line.index('/view/'):]
-        print _id
-        baidu[_id] = title
-
-print "Dictionary finish, length:", len(baidu)
-
-for line in open(BAIDU):
-    if line.startswith('FullText:'):
-        for item in re.findall(r'\[\[(.+?)\]\]'):
-            m, _id = item.split('|')
-            print ("%s\t%s")%(baidu[_id], m)
-
+def baidu_mention():
+    baidu = {}
+    title = None
+    _id = None
+    #for line in open(BAIDU):
+    fr = open(BAIDU)
+    line = fr.readline()
+    while line:
+        line = line.strip('\n')
+        if line.startswith('Title'):
+            try:
+                title = line[line.index(': ')+2:]
+                while not line.startswith('URL:'):
+                    line = fr.readline()
+                if line.startswith('URL:'):
+                    _id = '/'+line.strip('\n').split('/',3)[-1]
+                    if '#sub' in _id:
+                        _id=('/'.join(_id.split('.htm#sub'))+'.htm').replace('view', 'subview')
+                        #print _id
+                    baidu[_id] = title
+            except:
+                line = fr.readline()
+                continue
+        line = fr.readline()
     
+    print "Dictionary finish, length:", len(baidu)
+    
+    for line in open(BAIDU):
+        if line.startswith('FullText:'):
+            for item in re.findall(r'\[\[(.+?)\]\]', line):
+                #print item
+                try:
+                    m, _id = item.split('||')
+                except:
+                    continue
+                if _id in baidu:
+                    print ("%s\t%s")%(m, baidu[_id]) #mention, entity
+                else:
+                    #print "Missing id:%s"%_id
+                    continue
+
+def hudong_mention():
+    for line in open(HUDONG):
+        if line.startswith('Title:'):
+            title = line.strip('\n').split(':', 1)[1]
+            print ("%s\t%s"%(title, title))
+
+if __name__=="__main__":
+    #hudong_mention()
+    baidu_mention()
+    
+        
