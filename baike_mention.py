@@ -12,17 +12,24 @@ HUDONG = "/home/keg/data/baikedump/hudong-dump-20150702.dat"
 
 
 def baidu_mention():
+    """
+    baidu提取了title和hyperlink
+    """
     baidu = {}
     title = None
     _id = None
     #for line in open(BAIDU):
     fr = open(BAIDU)
     line = fr.readline()
+     
+    ### 创建baidu与其id的对应字典
+    ### 同时输出title\ttitle
     while line:
         line = line.strip('\n')
         if line.startswith('Title'):
             try:
                 title = line[line.index(': ')+2:]
+                print ("%s\t%s"%(title, title))
                 while not line.startswith('URL:'):
                     line = fr.readline()
                 if line.startswith('URL:'):
@@ -53,13 +60,16 @@ def baidu_mention():
                     continue
 
 def hudong_mention():
+    """
+    hudong只提取了title
+    """
     for line in open(HUDONG):
         if line.startswith('Title:'):
             title = line.strip('\n').split(':', 1)[1]
             print ("%s\t%s"%(title, title))
 
 if __name__=="__main__":
-    #hudong_mention()
+    hudong_mention()
     baidu_mention()
     
         

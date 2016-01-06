@@ -16,7 +16,7 @@ for fn in os.listdir(DIR):
             m,e = line.strip("\n").split("\t")
             e = e.lower().strip()
             m = m.strip().strip("\t")
-            if len(m) < 3:
+            if len(m) < 3: #删除了mention特别短的
                 print "Too Short:",line.strip("\n")
                 delete += 1
                 continue
@@ -28,6 +28,7 @@ for fn in os.listdir(DIR):
         m_e_c[m] = e_c
 
 with open("/home/xlore/server36/Mention_Title_Count.dat","w") as f:
+#with open("data/Mention_Title_Count.dat","w") as f:
     for m, e_c in m_e_c.items():
         for e,c in e_c.items():
             f.write(m+"::;"+e+"::;"+str(c)+"\n")

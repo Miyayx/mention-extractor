@@ -13,15 +13,17 @@
 * Hyperlinks in Content
 
 ##Code
-* baidu,hudong baike_mention.py
+* Extract Mention~Title
+** baidu,hudong baike_mention.py
     `python baike_mention.py > data/Mention_Entity/baidu_mention_entity.dat`
-* enwiki,zhwiki mapper.py
+** enwiki,zhwiki mapper.py
     `less enwiki-dump-xxxx.xml.bz2 | python mapper.py > data/Mention_Entity/enwiki_mention_entity.dat`
-* merge
+    `less zhwiki-dump-xxxx.xml.bz2 | python mapper.py > data/Mention_Entity/zhwiki_mention_entity.dat`
+* Merge
     `python merge.py`
 
 ## Database
->> 10.1.1.36 keg keg123456
+>> 10.1.1.36 keg 
 >> ./loadToMysql.sql
 
 
